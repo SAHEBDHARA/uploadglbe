@@ -91,6 +91,27 @@ app.post('/upload', async (req, res) => {
     }
 });
 
+// Add a new endpoint for deleting objects from S3
+app.post('/delete/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log(id);
+        const deletedData = await ThreeDObject.findByIdAndDelete(id);
+        
+        if (!deletedData) {
+            return res.status(404).json({ message: 'Data not found' });
+        }
+        
+        res.status(200).json({ message: 'Data deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error deleting data');
+    }
+});
+
+
+
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
